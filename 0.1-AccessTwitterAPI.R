@@ -29,6 +29,20 @@ trumpsTweets$created <- lubridate::ymd_hms(trumpsTweets$created)
 trumpsTweets$created <- trumpsTweets$created - 5*60*60 # puts in est time
 trumpsTweets$dayCreated <- wday(trumpsTweets$created, label = T)
 
+references <-  regmatches(trumpsTweets$tweet,
+                          gregexpr("@[[:alnum:]]+",trumpsTweets$tweet))
+# pipe sandwich
+references %>% 
+  unlist %>% table %>% 
+  sort(decreasing = TRUE) ->
+references 
+
+top3 <- names(references[1:3])
+
+trumpsTweets$nytFlag <- as.numeric(grepl(top3[1], trumpsTweets$tweet))
+trumpsTweets$cnnFlag <- as.numeric(grepl(top3[2], trumpsTweets$tweet))
+trumpsTweets$foxFlag <- as.numeric(grepl(top3[3], trumpsTweets$tweet))
+
 references <- regmatches(trumpsTweets$tweet,
                           gregexpr("@[[:alnum:]]+",trumpsTweets$tweet))
 # pipe sandwich
