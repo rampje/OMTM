@@ -1,6 +1,7 @@
 library(httr)
 library(jsonlite)
 library(lubridate)
+library(dplyr)
 
 # access News API (https://newsapi.org/) to get headline articles
 news.API.key <- "3ea7ac10835f464bafa4852873b21408"
@@ -39,5 +40,12 @@ allData$articles.publishedAt <- ymd_hms(allData$articles.publishedAt)
 
 allData$TrumpFlag <- as.numeric(grepl("trump", tolower(allData$articles.title)))
 
-write.csv(allData, "TrumpNewsCoverage.csv", row.names = FALSE)
+allData$Retrieved <- now()
+fileName <- paste0("TrumpNews", gsub(" EST", "", now()), ".csv")
+fileName <- gsub(":", ".", fileName)
+
+write.csv(allData, fileName, row.names = FALSE)
 # 2017-03-05T20:52:49Z <- 3:52pm est
+
+# add component to combine all the csvs that are in the directory
+# to do trend analysis
