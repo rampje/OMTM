@@ -2,7 +2,10 @@ library(httr)
 library(jsonlite)
 library(lubridate)
 library(dplyr)
+<<<<<<< HEAD
 source("creds.R")
+=======
+>>>>>>> e7d77ec14887e27fb1c0797495f31b1ae845d1b1
 
 # access News API (https://newsapi.org/) to get headline articles
 
