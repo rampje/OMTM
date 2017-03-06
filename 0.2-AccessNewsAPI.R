@@ -2,10 +2,7 @@ library(httr)
 library(jsonlite)
 library(lubridate)
 library(dplyr)
-<<<<<<< HEAD
 source("creds.R")
-=======
->>>>>>> e7d77ec14887e27fb1c0797495f31b1ae845d1b1
 
 # access News API (https://newsapi.org/) to get headline articles
 
@@ -22,7 +19,7 @@ for(x in 1:length(sources)){
     news.source <- GET(requestLinks[x])
     news.source <- content(news.source)
     news.source <- fromJSON(toJSON(news.source))
-    allData[[x]] <- data.frame(news.source)
+    allData[[x]] <- news.source
 }
 
 # 'time magazine' has diff data structure
