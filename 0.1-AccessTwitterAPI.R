@@ -4,7 +4,7 @@ library(httr)
 library(lubridate)
 library(dplyr)
 source("creds.R")
-
+setup_twitter_oauth(api_key, api_secret, access_token, access_token_secret)
 cleanFun <- function(htmlString) gsub("<.*?>", "", htmlString)
 FetchTweets <- function(twitterName){
   getTweets <- userTimeline(twitterName, n = 1000)
@@ -21,8 +21,6 @@ FetchTweets <- function(twitterName){
   userData$dayCreated <- wday(userData$created, label = T)
   userData
 }
-# retrieval and processing of Trump's Tweet data
-setup_twitter_oauth(api_key, api_secret, access_token, access_token_secret)
 
 trumpsTweets <- FetchTweets("realDonaldTrump")
 
@@ -42,11 +40,11 @@ trumpsTweets$cnnFlag <- as.numeric(grepl(top3[2], trumpsTweets$tweet))
 trumpsTweets$foxFlag <- as.numeric(grepl(top3[3], trumpsTweets$tweet))
 
 # for initial tableau exploration (3/5)
-write.csv(trumpsTweets, "D:/Projects/trump-analysis/trump.csv", row.names = FALSE)
+write.csv(trumpsTweets, "D:/Projects/OMTM/trump.csv", row.names = FALSE)
 # ------
 
 pence <- FetchTweets("vp")
-write.csv(pence, "D:/Projects/trump-analysis/pence.csv", row.names = FALSE)
+write.csv(pence, "D:/Projects/OMTM/pence.csv", row.names = FALSE)
 
 
 
