@@ -33,20 +33,7 @@ trumpsTweets <- FetchTweets("realDonaldTrump")
 
 references <-  regmatches(trumpsTweets$tweet,
                           gregexpr("@[[:alnum:]]+",trumpsTweets$tweet))
-# pipe sandwich
-references %>% 
-  unlist %>% table %>% 
-  sort(decreasing = TRUE) ->
-references 
 
-top3 <- names(references[1:3])
-
-trumpsTweets$nytFlag <- as.numeric(grepl(top3[1], trumpsTweets$tweet))
-trumpsTweets$cnnFlag <- as.numeric(grepl(top3[2], trumpsTweets$tweet))
-trumpsTweets$foxFlag <- as.numeric(grepl(top3[3], trumpsTweets$tweet))
-
-references <- regmatches(trumpsTweets$tweet,
-                          gregexpr("@[[:alnum:]]+",trumpsTweets$tweet))
 # pipe sandwich
 references %>% 
   unlist %>% table %>% 
