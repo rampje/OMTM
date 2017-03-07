@@ -3,6 +3,7 @@ library(ROAuth)
 library(httr)
 library(lubridate)
 library(dplyr)
+source("creds.R")
 
 cleanFun <- function(htmlString) gsub("<.*?>", "", htmlString)
 FetchTweets <- function(twitterName){
@@ -21,12 +22,6 @@ FetchTweets <- function(twitterName){
   userData
 }
 # retrieval and processing of Trump's Tweet data
-
-# Set API Keys
-api_key <- "ILZof5KEeOJqGsmBOZ3sWqlk4"
-api_secret <- "CeydSs6AIzQEAH7w6DnVnqAmdYRLaWmV9yo47uxAxGlNPeYy8x"
-access_token <- "838147378922340352-cu9GDw4XlNp7LVYYPyFOdMqPNq9KLbn"
-access_token_secret <- "NwcfOivECg44mRYLjc5hLQCN6ooANaMVxziKP7d4VnrS6"
 setup_twitter_oauth(api_key, api_secret, access_token, access_token_secret)
 
 trumpsTweets <- FetchTweets("realDonaldTrump")

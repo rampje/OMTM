@@ -1,4 +1,6 @@
-# Trump Analysis 
+# OMTM
+
+Operation Measure the Madness - previously called "Trump Analysis" until I decided this is going to take more manpower.
 
 Personal research exploring the effect Trump has on media and internet and vice versa.
 
