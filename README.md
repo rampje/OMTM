@@ -6,4 +6,11 @@ Personal research exploring the effect Trump has on media and internet and vice 
 
 This repository contains tools for scraping and processing data from various sources.
 
-Tableau exploration: https://public.tableau.com/profile/warner8560#!/vizhome/TrumpTweets_23/Dashboard1
+## We want to:
+
+1. Determine size and scope of "ecosystem" (people and media outlets)
+2. Develop questions that can be tested with data
+3. Build tools (crawlers, scheduled, scripts, web applications, whatever) to collect data
+4. Analyze, understand and (if possible) predict stuff
+
+### Tableau exploration: https://public.tableau.com/profile/warner8560#!/vizhome/TrumpTweets_23/Dashboard1
