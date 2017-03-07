@@ -30,6 +30,12 @@ for(x in 1:length(allData)){
   allData[[x]] <- data.frame(sapply(allData[[x]], as.character),
                              stringsAsFactors = FALSE)
 }
+
+
+# 3/7 need to adjust the structure of the data at this point
+# look into melting
+
+
 # merge all
 allData %>%
   Reduce( function(df1, df2) full_join(df1, df2), .) ->
