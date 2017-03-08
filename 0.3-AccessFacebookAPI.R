@@ -2,6 +2,16 @@ library(Rfacebook)
 library(dplyr)
 library(jsonlite)
 source("creds.R")
+ExtractPosts <- function(postPage, indexRange){
+  
+  posts <- vector("list", length(indexRange))
+  for(x in indexRange){
+    posts[[x]] <- getPost(postPage$id[x], token,
+                          n.likes = postPage$likes_count[x], 
+                          n.comments = postPage$comments_count[x])
+  }
+  posts
+}
 ExtractPostData <- function(postList, type="all"){
   if(type == "likes"){
     pld <- lapply(postList, "[[", 2)
@@ -32,22 +42,10 @@ cleanTags <- function(htmlString) gsub("<.*?>", "", htmlString)
 
 token <- fbOAuth(app_id, app_secret)
 
-# don't run getPage willy nilly
-
 # took about 7 minutes to run n = 2000
 trumpsPage <- getPage("DonaldTrump", token, n = 2000)
 # 8 minutes to run n = 2000
 nytPage <- getPage("nytimes", token , n = 2000)
-
-# this should be functionized with startingIndex arg
-trumpsPosts <- vector("list", 5)
-# 5 trump posts took 7 minutes, 32.3 mb list
-for(x in 1:length(trumpsPosts)){
-  trumpsPosts[[x]] <- getPost(trumpsPage$id[x], token,
-                              n.likes = trumpsPage$likes_count[x], 
-                              n.comments = trumpsPage$comments_count[x])
-}
-
 
 
 
