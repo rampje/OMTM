@@ -2,23 +2,33 @@ library(Rfacebook)
 library(dplyr)
 library(jsonlite)
 source("creds.R")
-ExtractPostData <- function(postList){
-  pd <- lapply(postList, "[[", 1) 
-  pd <- unlist(pd)
+ExtractPostData <- function(postList, type="all"){
+  if(type == "likes"){
+    pld <- lapply(postList, "[[", 2)
+    pld %>% Reduce(function(df1, df2) full_join(df1, df1), .)
   
-  postDataNames <- unique(names(pd))
-  
-  postDF <- data.frame(matrix(ncol = length(postDataNames),
-                              nrow = length(postList)))
-  
-  names(postDF) <- postDataNames
-  
-  for(x in 1:ncol(postDF)){
-    postDF[x] <- pd[names(pd)==names(postDF)[x]]
-    
-  }
-  postDF
+    } else if(type == "comments"){
+    pcd <- lapply(postList, "[[", 3)
+    pcd %>% Reduce(function(df1, df2) full_join(df1, df1), .)
+    } else {
+      pd <- lapply(postList, "[[", 1) 
+      pd <- unlist(pd)
+      
+      postDataNames <- unique(names(pd))
+      
+      postDF <- data.frame(matrix(ncol = length(postDataNames),
+                                  nrow = length(postList)))
+      
+      names(postDF) <- postDataNames
+      
+      for(x in 1:ncol(postDF)){
+        postDF[x] <- pd[names(pd)==names(postDF)[x]]
+        
+      }
+      postDF
+    } 
 }
+cleanTags <- function(htmlString) gsub("<.*?>", "", htmlString)
 
 token <- fbOAuth(app_id, app_secret)
 
@@ -28,7 +38,6 @@ token <- fbOAuth(app_id, app_secret)
 trumpsPage <- getPage("DonaldTrump", token, n = 2000)
 # 8 minutes to run n = 2000
 nytPage <- getPage("nytimes", token , n = 2000)
-
 
 # this should be functionized with startingIndex arg
 trumpsPosts <- vector("list", 5)
@@ -52,9 +61,8 @@ for(x in 1:length(trumpsPosts)){
 
 
 
-a1 %>%
-  Reduce( function(df1, df2) full_join(df1, df1), .) ->
-a2
+
+
 
 
 
