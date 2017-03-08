@@ -1,5 +1,3 @@
-library(RSQLite)
-library(sqldf)
 library(Rfacebook)
 library(dplyr)
 library(data.table)

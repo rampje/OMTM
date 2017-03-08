@@ -1,3 +1,5 @@
+library(RSQLite)
+library(sqldf)
 source("creds.R")
 source("FacebookFunctions.R")
 
@@ -7,8 +9,7 @@ source("FacebookFunctions.R")
 #trumpsPage <- getPage("DonaldTrump", token, n = 2000)
 
 # extract posts from trump page
-
-trumpsPosts <- ExtractPosts(trumpsPage, 1:100)
+trumpsPosts <- ExtractPosts(trumpsPage, 1:10)
 
 # set up connection to sqlite db
 db <- dbConnect(RSQLite::SQLite(), dbname="facebook.sqlite")
@@ -21,13 +22,6 @@ ExtractPostData(trumpsPosts, type="likes") %>%
   dbWriteTable(conn = db, name = "postlikes", overwrite = TRUE)
 
 ExtractPostData(trumpsPosts, type="comments") %>%
-  dbWriteTable(conn = db, name = "postcomments", overwrite = T)
-
-# utility functions
-dbListTables(db)
-dbListFields(db, "PostLikes")
-dbGetQuery(db, "SELECT * FROM posts")
-#dbRemoveTable(db, "table name")
+  dbWriteTable(conn = db, name = "postcomments", overwrite = TRUE)
 
 dbDisconnect(db)
-
