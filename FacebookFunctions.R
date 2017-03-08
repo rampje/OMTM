@@ -10,6 +10,7 @@ ExtractPosts <- function(postPage, indexRange){
   
   posts <- vector("list", length(indexRange))
   for(x in indexRange){
+    #Error in if (n.comments >= 500) { : missing value where TRUE/FALSE needed
     posts[[x]] <- getPost(postPage$id[x], token,
                           n.likes = postPage$likes_count[x], 
                           n.comments = postPage$comments_count[x])
