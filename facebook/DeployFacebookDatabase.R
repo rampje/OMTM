@@ -9,7 +9,7 @@ source("FacebookFunctions.R")
 #trumpsPage <- getPage("DonaldTrump", token, n = 2000)
 
 # extract posts from trump page
-trumpsPosts <- ExtractPosts(trumpsPage, 1:10)
+trumpsPosts <- ExtractPosts(trumpsPage, 1:30)
 
 # set up connection to sqlite db
 db <- dbConnect(RSQLite::SQLite(), dbname="facebook.sqlite")
