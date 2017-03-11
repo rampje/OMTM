@@ -7,22 +7,45 @@ CREATE TABLE "fbPosts" ( "from_id" TEXT, "from_name" TEXT, "message" TEXT,
 
 /* take union of the tables written from R and insert them into fbTable */
 INSERT INTO fbPosts
-SELECT * FROM trump UNION
-SELECT * FROM breitbart UNION
-SELECT * FROM fox UNION 
-SELECT * FROM faf UNION
-SELECT * FROM nyt UNION
 SELECT * FROM bbc UNION
+SELECT * FROM breitbart UNION
+SELECT * FROM cbs UNION 
+SELECT * FROM clinton UNION
+SELECT * FROM cnn UNION
+SELECT * FROM cspan UNION
 SELECT * FROM economist UNION
+SELECT * FROM faf UNION
+SELECT * FROM fox UNION
+SELECT * FROM hannity UNION
+SELECT * FROM huckabee UNION
+SELECT * FROM huffingtonpost UNION
+SELECT * FROM nyt UNION
+SELECT * FROM oreilly UNION
+SELECT * FROM pence UNION
+SELECT * FROM sanders UNION
+SELECT * FROM sputnik UNION
+SELECT * FROM theguardian UNION
+SELECT * FROM trump UNION
+SELECT * FROM usatoday UNION
+SELECT * FROM warren
 
 /* data exploration */
 SELECT 
-	type,
 	DISTINCT from_name,
-	CAST(likes_count as INT) as likes
-FROM trump
+	type,
+	CAST(likes_count as INT) as likes,
+	COUNT(*) as number_of_posts,
+	ROUND(likes_count / COUNT(*)) as likes_per_post
+FROM fbPosts
 GROUP BY from_id, type
-ORDER BY likes DESC
+ORDER BY likes_per_post DESC
+
+-- the statuses where hillary conceded election have crazy high amounts of likes
+SELECT SUM(likes_count), COUNT(*) FROM fbPosts 
+WHERE from_name = "Hillary Clinton" AND type = "status";
+
+SELECT SUM(likes_count), COUNT(*) FROM fbPosts 
+WHERE from_name = "Hillary Clinton" AND type != "status"
 
 
 SELECT 
@@ -34,8 +57,3 @@ SELECT
 FROM trump
 GROUP BY created_time
 ORDER BY created_time DESC
-
-
-
-SELECT
-	DISTINCT 
