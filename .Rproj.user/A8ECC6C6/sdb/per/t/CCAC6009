@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(Rfacebook)\nlibrary(dplyr)\nlibrary(data.table)\n\ncleanTags <- function(htmlString) gsub(\"<.*?>\", \"\", htmlString)\n\nExtractPosts <- function(postPage, indexRange){\n  \n  posts <- vector(\"list\", length(indexRange))\n  for(x in indexRange){\n    #Error in if (n.comments >= 500) { : missing value where TRUE/FALSE needed\n    posts[[x]] <- getPost(postPage$id[x], token,\n                          n.likes = postPage$likes_count[x], \n                          n.comments = postPage$comments_count[x])\n  }\n  posts\n}\n\nExtractPostData <- function(postList, type=\"all\"){\n  if(type == \"likes\"){\n    # initialize ID column\n    pd <- lapply(postList, \"[[\", 1)\n    postIDs <- sapply(pd, function(x) x$id)\n    # fetch likes data\n    pld <- lapply(postList, \"[[\", 2)\n    \n    postLengths <- unlist(sapply(pld, nrow))\n    \n    pld <- data.table::rbindlist(pld)\n    \n    pld$id <- rep(postIDs, postLengths)\n    pld$from_id <- as.numeric(pld$from_id)\n    \n    pld\n    \n  } else if(type == \"comments\"){\n    # initialize ID column\n    pd <- lapply(postList, \"[[\", 1)\n    postIDs <- sapply(pd, function(x) x$id)\n    #fetch comments data\n    pcd <- lapply(postList, \"[[\", 3)\n    \n    postLengths <- unlist(sapply(pcd, nrow))\n    \n    pcd <- data.table::rbindlist(pcd)\n    \n    pcd$id <- rep(postIDs, postLengths)\n    pcd$from_id <- as.numeric(pcd$from_id)\n    \n    pcd\n    \n  } else {\n    pd <- lapply(postList, \"[[\", 1) \n    pd <- unlist(pd)\n    \n    postDataNames <- unique(names(pd))\n    \n    postDF <- data.frame(matrix(ncol = length(postDataNames),\n                                nrow = length(postList)))\n    \n    names(postDF) <- postDataNames\n    \n    for(x in 1:ncol(postDF)){\n      postDF[x] <- pd[names(pd)==names(postDF)[x]]\n      \n    }\n    postDF\n  } \n}",
+    "created" : 1489006188595.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1975381978",
+    "id" : "CCAC6009",
+    "lastKnownWriteTime" : 1489013492,
+    "last_content_update" : 1489032771322,
+    "path" : "D:/Projects/OMTM/FacebookFunctions.R",
+    "project_path" : "FacebookFunctions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
