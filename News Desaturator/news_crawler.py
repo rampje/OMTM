@@ -8,7 +8,7 @@ import scrapy
 
 class NewsArticle(scrapy.Item):
     title = scrapy.Field()
-    text = scrapy.Field()
+   # text = scrapy.Field()
     link = scrapy.Field()
 
 class NewsSpider(scrapy.Spider):
@@ -20,9 +20,8 @@ class NewsSpider(scrapy.Spider):
         for url in response.xpath('//a'):
             news = NewsArticle()
 
-            news['title'] = "blah"
-            news['text'] = "blah2"
-            news['link'] = url.extract()
+            news['title'] = url.xpath('text()').extract()
+            news['link'] = url.xpath('@href').extract()
 
             yield news
 
