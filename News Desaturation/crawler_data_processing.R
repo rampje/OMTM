@@ -2,7 +2,8 @@ library(jsonlite)
 library(tidyverse)
 library(tm)
 
-source_file <- paste0("D:/Projects/OMTM","/News Desaturator/output.json")
+source_file <- paste0("D:/Projects/OMTM/News Desaturation/",
+                      "news_04032017_1538.json")
 
 news <- fromJSON(source_file, flatten = TRUE)
 
@@ -16,17 +17,7 @@ numwords_titles <- map_dbl(gregexpr("\\S+", titles), length)
 
 remove_titles <- titles[numwords_titles < 4]
 
-# manually flag to remove
-remove_df <- data.frame(
-  "title" = remove_titles,
-  "flag" = rep(1, length(remove_titles)),
-  stringsAsFactors = F
-)
-
-# View(remove_df) to manually find rows that should have flag = 0
-# found none
-
-titles <- titles[!(titles %in% remove_df$title)]
+titles <- titles[!(titles %in% remove_titles)]
 
 titles_df <- data.frame(
   "title" = titles,
