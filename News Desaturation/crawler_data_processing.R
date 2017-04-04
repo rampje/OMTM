@@ -1,55 +1,58 @@
-library(jsonlite)
 library(tidyverse)
 library(tm)
 
 source_file <- paste0("D:/Projects/OMTM/News Desaturation/",
-                      "news_04032017_1538.json")
+                      "news_04032017_1954.csv")
 
-news <- fromJSON(source_file, flatten = TRUE)
+news <- read.csv(source_file, stringsAsFactors = FALSE)
 
-titles <- unlist(news$title)
+news$processed_title <- gsub("\n", "", news$title)
 
-titles <- gsub("\n", "", titles)
-titles <- trimws(titles)
-titles <- titles[!titles %in% c(""," ")]
+news$title_wordcnt <- map_dbl(gregexpr("\\S+", news$processed_title), length)
 
-numwords_titles <- map_dbl(gregexpr("\\S+", titles), length)
+news$remove <- news$title_wordcnt < 4
 
-remove_titles <- titles[numwords_titles < 4]
+# manually find false title indeces
+View(news[news$remove==FALSE,])
+message("Sort by 'title_wordcnt' ascending when in View")
 
-titles <- titles[!(titles %in% remove_titles)]
+remove_indeces <- c(439,490,543,574:577,659,689,691,743,810,
+                    1072,1093,1131,1132,1539,1634,1636,1640,
+                    1728,1763,1830,1831,1988,2032,2034,2070,
+                    2076,2077,2313,2314,2322,2328,2402,2549,
+                    2550,2654,2957,2977,3198,3295,3332,3327,
+                    3602,3808,3809,3810,3990,4283,4283,4399,
+                    4464,4495,4570,4743,4758,4779,4780,4783,
+                    4806,4817,4818,4824,4830,4879,4891,4931,
+                    4941,4966,4974,4986,5009,5017,5021,5038,
+                    5057,5074,5080,5093,5155,5159,5210,5257,
+                    5436,462,858,976,982,1366,1656,1726,1742,
+                    183,1838,1894,1942,1987,2005,2145,2196,2326,
+                    2479,2542,2631,2766,2783,2899,2904,2907,3049,
+                    3189,3192,3202,3335,3471,3609,3693,3694,3799,
+                    3800,3801,3816,3825,3930,3946,4071,4177,4282,
+                    4289,4291,4407,4525,4588,4620,4642,4744,4745,
+                    4749,4820,4821,4829,4893,4894,4899,4901,4901,
+                    4908,4971,4973,5016,5062,5121,5148,5158,5182,
+                    5205,5213,5236,5445,5461,1155,2074,2185,2884,
+                    3021,3023,3571,3876,4939,4521,4527,4572,4619,
+                    4649,4750,4837,4900,5232,5238,200,922,1976,2668)
 
-titles_df <- data.frame(
-  "title" = titles,
-  "flag" = rep(0, length(titles)),
-  stringsAsFactors = F
-)
 
-# View(remove_df) to manually find rows that should have flag = 0
-
-filter_titles <- titles_df$title[c(18,27,65,83,86,102,126,147:149,
-                    157:159,179,188,190,201,208:210,212,
-                    232,240,246,251,259:266,275,277:278,
-                    287:292,320:321,335:337,344:350,353,
-                    365, 366, 367, 371,390:391,396:398,414,
-                    431:433,450, 468,469, 475, 477,522,
-                    549:550,582:584,607:609,628,642:644,676,
-                    680,712:714,729:731,742:747,784,816,
-                    840:841,850,852,865,871:872,877:880,
-                    887,893:904,908:917,934,935,949,958,
-                    974,991:994,998:1003,1009:1031)]
+news$remove[remove_indeces] <- TRUE
                     
+news %>% 
+  filter(remove == TRUE) %>%
+  write.csv("filter_frame_04032017.csv", row.names=F)
+
+news$
+  processed_title %>%
+                tolower %>%
+                removePunctuation %>%
+                removeWords(stopwords("en")) ->
+news$# sometimes R code can be structured weirdly...
+  processed_title
+                
 
 
-full_titles <- titles_df$title[!(titles_df$title %in% filter_titles)]
 
-clean_titles <- tolower(full_titles)
-clean_titles <- removePunctuation(clean_titles)
-clean_titles <- removeWords(clean_titles, stopwords("en"))
-
-all_words <- paste(clean_titles, collapse = " ")
-all_words <- map(all_words, function(x) strsplit(x, " "))
-all_words <- unlist(all_words)
-all_words <- all_words[nchar(all_words) > 2]
-
-View(data.frame(table(all_words)))
